@@ -146,5 +146,5 @@ Contributions are welcome!
 
 ## 👨‍💻 Author
 
-**Your Name**  
+**Sahadat Hossain**  
 🌐 [GitHub](https://github.com/sahadat20) 

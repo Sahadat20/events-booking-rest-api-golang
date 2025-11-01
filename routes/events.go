@@ -31,14 +31,15 @@ func getEvent(context *gin.Context) {
 }
 
 func createEvent(context *gin.Context) {
+
 	var event models.Event
 	err := context.ShouldBindJSON(&event)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "could not parse data"})
 		return
 	}
-	event.ID = 1
-	event.UserId = 1
+	userId := context.GetInt64("userId") //comes from autheticate midleware
+	event.UserId = userId
 	err = event.Save()
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not save events. try again", "erro": err})
@@ -54,9 +55,15 @@ func updateEvent(context *gin.Context) {
 		return
 	}
 
-	_, err = models.GetEventByID(eventId)
+	userId := context.GetInt64("userId") //comes from autheticate midleware
+	event, err := models.GetEventByID(eventId)
+
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not fethc event. try again"})
+		return
+	}
+	if event.UserId != userId {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized to update event"})
 		return
 	}
 
@@ -84,14 +91,19 @@ func deleteEvent(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse event id."})
 		return
 	}
+	userId := context.GetInt64("userId") //comes from autheticate midleware
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not fethc event. try again", "error": err})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not fethc event. try again"})
+		return
+	}
+	if event.UserId != userId {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized to delete event"})
 		return
 	}
 	err = event.Delete()
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not delete event", "error": err})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not delete event"})
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{"message": "Event deleted successfully"})

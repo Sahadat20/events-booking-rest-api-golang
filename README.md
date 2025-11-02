@@ -46,8 +46,8 @@ This project demonstrates how to build a complete backend with Go, REST principl
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/event-booking-api.git
-cd event-booking-api
+git clone https://github.com/Sahadat20/events-booking-rest-api-golang.git
+cd events-booking-rest-api-golang
 ```
 
 ### 2. Initialize Go modules
@@ -60,7 +60,6 @@ Create a `.env` file in the project root:
 ```env
 PORT=8080
 JWT_SECRET=your_secret_key
-DB_PATH=./events.db
 ```
 
 ### 4. Run the server
@@ -75,10 +74,35 @@ Server will start on:
 
 ## 🧪 Example Requests
 
+### Create an User
+```bash
+POST /signup
+Content-Type: application/json
+
+{
+    "email" : "abc@gmail.com",
+    "password" : "test"
+    
+}
+```
+
+### Login User
+```bash
+POST /login
+Content-Type: application/json
+
+{
+    "email" : "abc@gmail.com",
+    "password" : "test"
+    
+}
+```
+
 ### Create an Event
 ```bash
 POST /events
 Content-Type: application/json
+Authorization: Bearer <your_jwt_token>
 
 {
   "title": "Tech Conference 2025",
@@ -88,30 +112,55 @@ Content-Type: application/json
 }
 ```
 
+### Delete an Event
+```bash
+DELETE http://localhost:8080/events/1  //only creator can delete
+Authorization: Bearer <your_jwt_token>
+
+```
+
+### Get All Event
+```bash
+GET http://localhost:8080/events
+```
+
+### Get Single Event
+```bash
+GET GET http://localhost:8080/events/1
+
+```
+
 ### Register for an Event
 ```bash
 POST /events/1/register
 Authorization: Bearer <your_jwt_token>
 ```
+### Cacel an registration
+```bash
+DELETE http://localhost:8080/events/1/register 
+Authorization: Bearer <your_jwt_token>
 
+```
 ---
 
 ## 🧩 Folder Structure
 
 ```
 ├── main.go
-├── controllers/
-│   ├── event_controller.go
-│   ├── user_controller.go
 ├── models/
 │   ├── event.go
 │   ├── user.go
 ├── routes/
-│   ├── event_routes.go
-│   ├── user_routes.go
+│   ├── routes.go
+│   ├── events.go
+│   ├── register.go
+│   ├── users.go
 ├── middlewares/
-│   └── auth_middleware.go
-├── database/
+│   └── auth.go
+├── utils/
+│   └── hash.go
+│   └── jwt.go
+├── db/
 │   └── db.go
 ├── go.mod
 └── README.md

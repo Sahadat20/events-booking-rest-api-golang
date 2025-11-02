@@ -35,10 +35,10 @@ This project demonstrates how to build a complete backend with Go, REST principl
 ## 🛠️ Tech Stack
 
 - **Language:** Go (Golang)
-- **Framework:** net/http
-- **Database:** SQLite / PostgreSQL (depending on configuration)
+- **Framework:** gin
+- **Database:** SQLite
 - **Authentication:** JWT (JSON Web Token)
-- **Tools:** Go modules, Gorilla/Mux (for routing)
+- **Tools:** Go modules
 
 ---
 
